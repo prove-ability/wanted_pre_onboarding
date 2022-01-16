@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import NextArrow from "../../assets/images/NextArrow";
 import PrevArrow from "../../assets/images/PrevArrow";
@@ -198,41 +198,43 @@ interface SlideProps {
 const Slide: React.FC<SlideProps> = ({ itemList, interval = 2000 }) => {
 	const [slideIndex, setSlideIndex] = useState<number>(1);
 
-	let maxLength = 0;
+	let maxLength = useRef(0);
 
-	let timer: NodeJS.Timeout | null = null;
+	let timer = useRef<null | NodeJS.Timeout>(null);
+	// let timer: NodeJS.Timeout | null = null;
 
-	useEffect(() => {
-		showSlides();
-	}, [slideIndex]);
-
-	function showSlides() {
+	const showSlides = useCallback(() => {
 		let i;
 		const slides = document.getElementsByClassName("slides");
-		maxLength = slides.length;
+		maxLength.current = slides.length;
 		for (i = 0; i < slides.length; i++) {
 			(slides[i] as HTMLDivElement).style.display = "none";
 		}
 		(slides[slideIndex - 1] as HTMLDivElement).style.display = "block";
-		timer = setTimeout(() => {
+		timer.current = setTimeout(() => {
 			if (slideIndex === slides.length) {
 				setSlideIndex(1);
 			} else {
 				setSlideIndex(slideIndex + 1);
 			}
 		}, interval);
-	}
+	}, [interval, slideIndex, maxLength]);
+
+	useEffect(() => {
+		showSlides();
+	}, [slideIndex, showSlides]);
+
 	function plusSlides(n: number) {
-		timer && clearTimeout(timer);
+		timer.current && clearTimeout(timer.current);
 		if (slideIndex === 1) {
 			if (Math.sign(n) === -1) {
-				setSlideIndex(maxLength);
+				setSlideIndex(maxLength.current);
 			} else {
 				setSlideIndex(slideIndex + 1);
 			}
 		} else {
-			if (slideIndex + n > maxLength) {
-				setSlideIndex(slideIndex + n - maxLength);
+			if (slideIndex + n > maxLength.current) {
+				setSlideIndex(slideIndex + n - maxLength.current);
 				return;
 			}
 			setSlideIndex(slideIndex + n);
@@ -266,12 +268,12 @@ const Slide: React.FC<SlideProps> = ({ itemList, interval = 2000 }) => {
 					);
 				})}
 
-				<a className="prev" onClick={() => plusSlides(-1)}>
+				<span className="prev" onClick={() => plusSlides(-1)}>
 					<PrevArrow />
-				</a>
-				<a className="next" onClick={() => plusSlides(1)}>
+				</span>
+				<span className="next" onClick={() => plusSlides(1)}>
 					<NextArrow />
-				</a>
+				</span>
 			</div>
 		</SSlide>
 	);
