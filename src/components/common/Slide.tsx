@@ -15,8 +15,12 @@ const SSlide = styled.div`
 	}
 
 	.slides {
+		@media (max-width: 1199px) {
+			height: 183px;
+			border-radius: 3px 3px 0 0;
+			padding: 0 18px;
+		}
 		height: 100%;
-		/* display: none; */
 		> img {
 			width: 100%;
 			height: 100%;
@@ -56,6 +60,11 @@ const SSlide = styled.div`
 	}
 
 	.area-text {
+		@media (max-width: 1199px) {
+			position: static;
+			width: 100%;
+			text-align: center;
+		}
 		position: absolute;
 		bottom: 28px;
 		width: 330px;
@@ -66,12 +75,36 @@ const SSlide = styled.div`
 		text-align: left;
 		left: 34px;
 		.title {
+			@media (max-width: 1199px) {
+				margin: 20px 0 0;
+				margin-top: 20px;
+				font-size: 18px;
+				line-height: 1;
+				font-weight: 700;
+				color: #333;
+				width: "auto";
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
 			margin: 20px 20px 0px;
 			font-size: 20px;
 			line-height: 1.5;
 			font-weight: 700;
 		}
 		.description {
+			@media (max-width: 1199px) {
+				margin-top: 6px;
+				font-size: 13px;
+				font-weight: 500;
+				line-height: 1.15;
+				color: #666;
+				width: "auto";
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				height: 15px;
+			}
 			margin: 0 20px;
 			height: 44px;
 			font-size: 14px;
@@ -79,6 +112,9 @@ const SSlide = styled.div`
 			color: #333;
 		}
 		.divider {
+			@media (max-width: 1199px) {
+				display: none;
+			}
 			height: 1px;
 			margin: 0;
 			border: none;
@@ -88,6 +124,14 @@ const SSlide = styled.div`
 			background-color: #ececec;
 		}
 		.a {
+			@media (max-width: 1199px) {
+				margin: 0 auto;
+				height: 40px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 64px;
+			}
 			display: block;
 			margin: 12px 0 0 13px;
 			padding: 6px 8px;
