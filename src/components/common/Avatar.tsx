@@ -26,7 +26,7 @@ interface AvatarProps {
 
 const Avatar: React.FC<AvatarProps> = ({ src }) => {
 	return (
-		<AAvatar>
+		<AAvatar className="avatar">
 			<img className="image" src={src} alt="profile" />
 		</AAvatar>
 	);
