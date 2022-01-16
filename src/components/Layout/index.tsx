@@ -1,11 +1,18 @@
+import styled from "styled-components";
 import Header from "./Header";
+
+const SLayout = styled.div`
+	.main {
+		padding-top: 30px;
+	}
+`;
 
 const Layout: React.FC = ({ children }) => {
 	return (
-		<div>
+		<SLayout>
 			<Header />
-			<main>{children}</main>
-		</div>
+			<main className="main">{children}</main>
+		</SLayout>
 	);
 };
 
