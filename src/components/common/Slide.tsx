@@ -1,88 +1,104 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import NextArrow from "../../assets/images/NextArrow";
+import PrevArrow from "../../assets/images/PrevArrow";
 
 const SSlide = styled.div`
 	width: 100%;
 	height: 100%;
 
-	/* Slideshow container */
 	.slideshow-container {
 		max-width: 1000px;
 		position: relative;
 		margin: auto;
+		height: 300px;
 	}
 
-	/* Hide the images by default */
-	.mySlides {
-		display: none;
+	.slides {
+		height: 100%;
+		/* display: none; */
+		> img {
+			width: 100%;
+			height: 100%;
+			border-radius: 4px;
+			object-fit: cover;
+		}
 	}
 
-	/* Next & previous buttons */
 	.prev,
 	.next {
 		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		position: absolute;
-		top: 50%;
-		width: auto;
-		margin-top: -22px;
-		padding: 16px;
-		color: white;
-		font-weight: bold;
-		font-size: 18px;
-		transition: 0.6s ease;
-		border-radius: 0 3px 3px 0;
-		user-select: none;
+		top: 120px;
+		width: 30px;
+		height: 60px;
+		opacity: 0.5;
+		border-radius: 15px;
+		background-color: #fff;
+		color: rgb(51, 51, 51);
+		font-size: 16px;
 	}
 
-	/* Position the "next button" to the right */
+	.prev {
+		left: calc((100% - 1210px) / 2);
+	}
+
 	.next {
-		right: 0;
-		border-radius: 3px 0 0 3px;
+		right: calc((100% - 1200px) / 2);
 	}
 
-	/* On hover, add a black background color with a little bit see-through */
 	.prev:hover,
 	.next:hover {
 		background-color: rgba(0, 0, 0, 0.8);
 	}
 
-	/* Caption text */
-	.text {
-		color: #f2f2f2;
-		font-size: 15px;
-		padding: 8px 12px;
+	.area-text {
 		position: absolute;
-		bottom: 8px;
-		width: 100%;
-		text-align: center;
+		bottom: 28px;
+		width: 330px;
+		height: 146px;
+		border-radius: 4px;
+		background-color: #fff;
+		/* opacity: 0; */
+		text-align: left;
+		left: 34px;
+		.title {
+			margin: 20px 20px 0px;
+			font-size: 20px;
+			line-height: 1.5;
+			font-weight: 700;
+		}
+		.description {
+			margin: 0 20px;
+			height: 44px;
+			font-size: 14px;
+			line-height: 1.64;
+			color: #333;
+		}
+		.divider {
+			height: 1px;
+			margin: 0;
+			border: none;
+			-webkit-flex-shrink: 0;
+			-ms-flex-negative: 0;
+			flex-shrink: 0;
+			background-color: #ececec;
+		}
+		.a {
+			display: block;
+			margin: 12px 0 0 13px;
+			padding: 6px 8px;
+			font-size: 14px;
+			font-weight: 700;
+			line-height: 1;
+			color: #36f;
+			text-decoration: none;
+		}
 	}
 
-	/* Number text (1/3 etc) */
-	.numbertext {
-		color: #f2f2f2;
-		font-size: 12px;
-		padding: 8px 12px;
-		position: absolute;
-		top: 0;
-	}
-
-	/* The dots/bullets/indicators */
-	.dot {
-		cursor: pointer;
-		height: 15px;
-		width: 15px;
-		margin: 0 2px;
-		background-color: #bbb;
-		border-radius: 50%;
-		display: inline-block;
-		transition: background-color 0.6s ease;
-	}
-
-	.active,
-	.dot:hover {
-		background-color: #717171;
-	}
-
-	/* Fading animation */
 	.fade {
 		-webkit-animation-name: fade;
 		-webkit-animation-duration: 1.5s;
@@ -108,99 +124,98 @@ const SSlide = styled.div`
 		}
 	}
 `;
+// 쟝소: 1060ㅔㅌ
+export interface Item {
+	title: string;
+	description: string;
+	link: string;
+	image: string;
+}
+interface SlideProps {
+	itemList: Item[];
+	interval: number;
+}
 
-function Slide() {
-	let slideIndex = 0;
-	// showSlides();
+const Slide: React.FC<SlideProps> = ({ itemList, interval = 2000 }) => {
+	const [slideIndex, setSlideIndex] = useState<number>(1);
 
-	(function showSlides() {
+	let maxLength = 0;
+
+	let timer: NodeJS.Timeout | null = null;
+
+	useEffect(() => {
+		showSlides();
+	}, [slideIndex]);
+
+	function showSlides() {
 		let i;
-		const slides = document.getElementsByClassName("mySlides");
-		const dots = document.getElementsByClassName("dot");
-		// console.log(slides);
-		// console.log(dots);
+		const slides = document.getElementsByClassName("slides");
+		maxLength = slides.length;
 		for (i = 0; i < slides.length; i++) {
-			(slides[i] as any).style.display = "none";
+			(slides[i] as HTMLDivElement).style.display = "none";
 		}
-		slideIndex++;
-		if (slideIndex > slides.length) {
-			slideIndex = 1;
+		(slides[slideIndex - 1] as HTMLDivElement).style.display = "block";
+		timer = setTimeout(() => {
+			if (slideIndex === slides.length) {
+				setSlideIndex(1);
+			} else {
+				setSlideIndex(slideIndex + 1);
+			}
+		}, interval);
+	}
+	function plusSlides(n: number) {
+		timer && clearTimeout(timer);
+		if (slideIndex === 1) {
+			if (Math.sign(n) === -1) {
+				setSlideIndex(maxLength);
+			} else {
+				setSlideIndex(slideIndex + 1);
+			}
+		} else {
+			if (slideIndex + n > maxLength) {
+				setSlideIndex(slideIndex + n - maxLength);
+				return;
+			}
+			setSlideIndex(slideIndex + n);
 		}
-		for (i = 0; i < dots.length; i++) {
-			dots[i].className = dots[i].className.replace(" active", "");
-		}
-		if (slides.length > 1) (slides[slideIndex - 1] as any).style.display = "block";
-		if (dots.length > 1) dots[slideIndex - 1].className += " active";
-		setTimeout(showSlides, 2000); // Change image every 2 seconds
-	})();
+	}
+
 	return (
 		<SSlide>
-			{/* <!-- Slideshow container --> */}
 			<div className="slideshow-container">
-				{/* <!-- Full-width images with number and caption text --> */}
-				<div className="mySlides fade">
-					<div className="numbertext">1 / 3</div>
-					<img
-						src="https://static.wanted.co.kr/images/banners/1486/fba2df30.jpg"
-						style={{ width: "100%" }}
-						alt="iamge"
-					/>
-					<div className="text">Caption Text</div>
-				</div>
+				{itemList.map((item, index) => {
+					const onMove = (link: string) => {
+						window.location.href = link;
+					};
+					return (
+						<div className="slides fade" key={index}>
+							<img
+								src={item.image}
+								alt="iamge"
+								style={{ cursor: "pointer" }}
+								onClick={() => onMove(item.link)}
+							/>
+							<div className="area-text">
+								<h2 className="title">{item.title}</h2>
+								<div className="description">{item.description}</div>
+								<hr className="divider" />
+								<a className="a" href={item.link}>
+									바로가기 &#62;
+								</a>
+							</div>
+						</div>
+					);
+				})}
 
-				<div className="mySlides fade">
-					<div className="numbertext">2 / 3</div>
-					<img
-						src="https://static.wanted.co.kr/images/banners/1484/b2853456.jpg"
-						style={{ width: "100%" }}
-						alt="iamge"
-					/>
-					<div className="text">Caption Two</div>
-				</div>
-
-				<div className="mySlides fade">
-					<div className="numbertext">3 / 3</div>
-					<img
-						src="https://static.wanted.co.kr/images/banners/1460/619f3af7.jpg"
-						style={{ width: "100%" }}
-						alt="iamge"
-					/>
-					<div className="text">Caption Three</div>
-				</div>
-
-				{/* <!-- Next and previous buttons --> */}
-				<a
-					className="prev"
-					//   onClick="plusSlides(-1)"
-				>
-					&#10094;
+				<a className="prev" onClick={() => plusSlides(-1)}>
+					<PrevArrow />
 				</a>
-				<a
-					className="next"
-					//   onClick="plusSlides(1)"
-				>
-					&#10095;
+				<a className="next" onClick={() => plusSlides(1)}>
+					<NextArrow />
 				</a>
-			</div>
-			<br />
-
-			{/* <!-- The dots/circles --> */}
-			<div style={{ textAlign: "center" }}>
-				<span
-					className="dot"
-					//   onClick="currentSlide(1)"
-				></span>
-				<span
-					className="dot"
-					//   onClick="currentSlide(2)"
-				></span>
-				<span
-					className="dot"
-					//   onClick="currentSlide(3)"
-				></span>
 			</div>
 		</SSlide>
 	);
-}
+};
 
 export default Slide;
