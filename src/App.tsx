@@ -4,7 +4,7 @@
 import reset from "styled-reset";
 import { createGlobalStyle } from "styled-components";
 
-import Slice from "./components/common/Slice";
+import Slide from "./components/common/Slide";
 import Layout from "./components/Layout";
 
 const GlobalStyle = createGlobalStyle`
@@ -17,7 +17,7 @@ function App() {
 		<>
 			<GlobalStyle />
 			<Layout>
-				<Slice />
+				<Slide />
 			</Layout>
 		</>
 	);
