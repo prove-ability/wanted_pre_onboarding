@@ -44,14 +44,29 @@ const SSlide = styled.div`
 		background-color: #fff;
 		color: rgb(51, 51, 51);
 		font-size: 16px;
+		@media (max-width: 1199px) {
+			top: 60px;
+		}
 	}
 
 	.prev {
 		left: calc((100% - 1210px) / 2);
+		@media (max-width: 1300px) {
+			left: calc((100% - 1100px) / 2);
+		}
+		@media (max-width: 1100px) {
+			display: none;
+		}
 	}
 
 	.next {
 		right: calc((100% - 1200px) / 2);
+		@media (max-width: 1300px) {
+			right: calc((100% - 1100px) / 2);
+		}
+		@media (max-width: 1100px) {
+			display: none;
+		}
 	}
 
 	.prev:hover,
